@@ -16,15 +16,15 @@ exports.createCheckoutSession = async (req, res) => {
                 {
                     // This Price ID is created in your Stripe Dashboard.
                     // Go to Products -> Add Product -> Add a price.
-                    price: 'price_1PQUaYEXa3pxYLz4FExA8aah', // Replace with your actual Price ID from Stripe
+                    price: 'price_1Ro0QpPKKtYRpJpXG83K0CaG', // Replace with your actual Price ID from Stripe
                     quantity: 1,
                 },
             ],
             // Pass the user's ID in the metadata so we know who to upgrade on success
             client_reference_id: userId.toString(),
             // URL to redirect to on success/cancellation
-            success_url: 'http://localhost:3000/payment/success', // Your frontend success URL
-            cancel_url: 'http://localhost:3000/dashboard', // Back to the dashboard on cancel
+            success_url: 'http://localhost:5173/payment/success', // Your frontend success URL
+            cancel_url: 'http://localhost:5173/dashboard', // Back to the dashboard on cancel
         });
 
         res.json({ url: session.url });

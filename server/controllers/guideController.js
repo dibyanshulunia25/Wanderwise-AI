@@ -1,14 +1,19 @@
 const TravelGuide = require('../models/TravelGuide');
 const User = require('../models/User');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const axios = require('axios');
 
 // Initialize Google Generative AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.0.pro" });
+// const genAI = new GoogleGenerativeAI({
+//     apiKey: process.env.GEMINI_API_KEY,
+//     apiEndpoint: 'https://generativelanguage.googleapis.com/v1'
+// });
+// const model = genAI.getGenerativeModel({ model: "models/gemini-2.5-pro" });
 
 // @desc    Generate a new travel guide
 // @route   POST /api/guides/generate
 exports.generateGuide = async (req, res) => {
+    // const models = await genAI.listModels();
+    // console.log(models);
     const { destination, budget, numberOfPeople, days } = req.body;
     const userId = req.user._id; // User ID from the 'protect' middleware
 
@@ -21,7 +26,7 @@ exports.generateGuide = async (req, res) => {
             user.guideCount = 0;
             user.guideResetDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
         }
-        
+
         // Block normal users if they have exceeded their yearly limit
         if (user.userTier === 'normal' && user.guideCount >= 5) {
             return res.status(403).json({ message: 'Normal tier limit of 5 guides per year reached. Please upgrade to Pro.' });
@@ -53,10 +58,35 @@ exports.generateGuide = async (req, res) => {
             Provide a rough, estimated breakdown of how the budget could be allocated between flights, accommodation, food, and activities.
         `;
 
-        // --- Call the AI Model ---
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const guideContent = response.text();
+        // // --- Call the AI Model ---
+        // const result = await model.generateContent(prompt);
+        // const response = await result.response;
+        // const guideContent = response.text();
+
+        // const completion = await openai.chat.completions.create({
+        //     model: "gpt-3.5-turbo", // or "gpt-4" if you have access
+        //     messages: [{ role: "user", content: prompt }],
+        //     max_tokens: 2048,
+        // });
+
+        // const guideContent = completion.choices[0].message.content;
+
+        // --- Call Hugging Face Inference API ---
+        const hfResponse = await axios.post(
+            'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
+            { inputs: prompt },
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.HF_API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                timeout: 120000 // 2 minutes, adjust if needed
+            }
+        );
+
+        // The response format may vary by model; for text models:
+        const guideContent = hfResponse.data[0]?.generated_text || "No response from model.";
+
 
         // --- Save to Database ---
         const travelGuide = await TravelGuide.create({

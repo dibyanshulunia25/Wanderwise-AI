@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config(); // Loads environment variables from .env file
 
+// console.log('Gemini API Key:', process.env.GEMINI_API_KEY); // Log the API key for debugging
 // Import routes
 const authRoutes = require('./routes/auth');
 const guideRoutes = require('./routes/guides');

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const AuthPage = ({ isLogin }) => {
@@ -7,7 +7,7 @@ const AuthPage = ({ isLogin }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    // const navigate = useNavigate();
+    const navigate = useNavigate();    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,8 +23,11 @@ const AuthPage = ({ isLogin }) => {
             // Save user info and token to local storage
             localStorage.setItem('userInfo', JSON.stringify(data));
             
+            console.log("navigate to dashboard");
+            // Redirect to dashboard after successful login or registration
+            navigate('/dashboard');
+            console.log("navigated to dashboard");
             setLoading(false);
-            Navigate('/dashboard'); // Redirect to dashboard after successful auth
         } catch (err) {
             setError(err.response?.data?.message || 'An error occurred');
             setLoading(false);
