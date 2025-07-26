@@ -58,19 +58,7 @@ exports.generateGuide = async (req, res) => {
             Provide a rough, estimated breakdown of how the budget could be allocated between flights, accommodation, food, and activities.
         `;
 
-        // // --- Call the AI Model ---
-        // const result = await model.generateContent(prompt);
-        // const response = await result.response;
-        // const guideContent = response.text();
-
-        // const completion = await openai.chat.completions.create({
-        //     model: "gpt-3.5-turbo", // or "gpt-4" if you have access
-        //     messages: [{ role: "user", content: prompt }],
-        //     max_tokens: 2048,
-        // });
-
-        // const guideContent = completion.choices[0].message.content;
-
+        
         // --- Call Hugging Face Inference API ---
         const hfResponse = await axios.post(
             'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
@@ -107,9 +95,9 @@ exports.generateGuide = async (req, res) => {
         res.status(201).json(travelGuide);
 
     } catch (error) {
-        console.error("AI generation or database error:", error);
-        res.status(500).json({ message: "Failed to generate travel guide due to a server error." });
-    }
+    console.error("AI generation or database error:", error?.response?.data || error);
+    res.status(500).json({ message: error?.response?.data?.error || error?.message || "Failed to generate guide" });
+}
 };
 
 // @desc    Get all guides for a logged-in user
