@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
+import Hero from "./_components/Hero";
+import { PopularCityList } from "./_components/PopularCityList";
 
 export default function Home() {
   return (
-    <div className="text-3xl font-bold underline">
-      Hello world!
-      <Button variant="default">Click me</Button>
-    </div>
+    <>
+      <Hero />
+      <PopularCityList />
+    </>
   );
 }
