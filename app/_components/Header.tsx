@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { SignInButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -27,14 +28,16 @@ const Header = () => {
             </div>
             {/* menu options */}
             <div className='items-center gap-8 hidden md:flex text-secondary'>
-                {menuOptions.map((option,index) => (
+                {menuOptions.map((option, index) => (
                     <Link key={index} href={option.path} className='hover:underline hover:text-primary'>
                         <h2 className='font-semibold hover:scale-110 transition-all'>{option.name}</h2>
                     </Link>
                 ))}
             </div>
             {/* get started button */}
-            <Button className='hover:cursor-pointer'>Get Started</Button>
+            <SignInButton mode='modal'>
+                <Button className='hover:cursor-pointer'>Get Started</Button>
+            </SignInButton>
         </div>
     )
 }

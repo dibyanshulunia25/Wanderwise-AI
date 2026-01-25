@@ -1,7 +1,10 @@
+"use client";
 import { Button } from "@/components/ui/button"
 import { HeroVideoDialog } from "@/components/ui/hero-video-dialog"
 import { Textarea } from "@/components/ui/textarea"
+import { useUser } from "@clerk/nextjs"
 import { ArrowDown, Globe2, Landmark, Plane, Send } from "lucide-react"
+import { useRouter } from "next/navigation";
 import { AiFillSchedule } from "react-icons/ai"
 import { FaHotel, FaMoneyBill, FaPlaneUp, FaUserSecret } from "react-icons/fa6"
 
@@ -29,8 +32,19 @@ const suggestions = [
     },
 ]
 
-
 const Hero = () => {
+
+    const {user} = useUser();
+    const router = useRouter();
+
+    const onSend = () => {
+        if(!user){
+            router.push("/sign-in");
+            return;
+        }
+        //Navigate to create trip planner page
+    }
+
     return (
         <div className="mt-24 flex items-center justify-center">
             {/* content */}
@@ -41,14 +55,16 @@ const Hero = () => {
                     </h1>
 
                     <p className="text-secondary opacity-70 mt-5 text-lg capitalize">
-                        Tell me where you want to go and leave the rest to me: <span className="text-primary flex items-center justify-center gap-2"><FaPlaneUp />flights | <FaHotel />hotels | <AiFillSchedule />itinerary</span>
+                        Tell me where you want to go and leave the rest to me: <span className="text-primary flex items-center justify-center gap-4 pt-2"><FaPlaneUp />flights | <FaHotel />hotels | <AiFillSchedule />itinerary</span>
                     </p>
                 </div>
                 {/* input box */}
                 <div>
                     <div className="border border-primary/40 rounded-2xl mt-4 p-4 shadow-lg relative">
                         <Textarea placeholder="Create a Trip of your dreams..." className="w-full h-28 bg-transparent border-none focus-visible:ring-0 shadow-none resize-none" />
-                        <Button size={"icon"} className="absolute bottom-4 right-4" ><Send className="w-12 h-12" /></Button>
+                        <Button size={"icon"} className="absolute bottom-4 right-4" onClick={() => onSend()} >
+                            <Send className="w-12 h-12" />
+                        </Button>
                     </div>
                 </div>
                 {/* suggestion list */}
