@@ -48,4 +48,4 @@ const Provider = ({
 
 export default Provider
 
-export const useUserDetail = () => { useContext(UserDetailContext); }
+export const useUserDetail = () => { return useContext(UserDetailContext); }
