@@ -9,7 +9,7 @@ import { AiFillSchedule } from "react-icons/ai"
 import { FaHotel, FaMoneyBill, FaPlaneUp, FaUserSecret } from "react-icons/fa6"
 
 
-const suggestions = [
+export const suggestions = [
     {
         title: "Create New Trip",
         icon: <Globe2 className="text-blue-400 h-5 w-5" />
