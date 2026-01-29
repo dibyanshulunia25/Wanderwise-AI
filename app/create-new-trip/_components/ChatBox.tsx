@@ -5,10 +5,15 @@ import { Loader2, Send } from 'lucide-react'
 import { useState } from 'react'
 import axios from 'axios'
 import EmptyBoxState from './EmptyBoxState';
+import GroupSizeUi from './GroupSizeUi';
+import BudgetUi from './BudgetUi';
+import DaysUi from './DaysUi';
+import FinalUi from './FinalUi';
 
 type Message = {
     role: string,
-    content: string
+    content: string,
+    ui: string,
 }
 
 function ChatBox() {
@@ -25,7 +30,7 @@ function ChatBox() {
         setUserInput('');
         const newMsg: Message = {
             role: "user",
-            content: userInput
+            content: userInput,
         }
 
         setMessages((prev: Message[]) => [...prev, newMsg]);
@@ -36,14 +41,36 @@ function ChatBox() {
 
         setMessages((prev: Message[]) => [...prev, {
             role: "assistant",
-            content: result?.data?.resp
+            content: result?.data?.resp,
+            ui: result?.data?.ui
         }]);
 
         setLoading(false);
     }
+
+    const RenderGenerativeUi = (ui: string) => {
+        if (ui == "budget") {
+            //budget ui component
+            return <BudgetUi onSelectedOption={(v: string) => { setUserInput(v); onSend() }} />
+        }
+        else if (ui == "groupSize") {
+            //groupSize ui component
+            return <GroupSizeUi onSelectedOption={(v: string) => { setUserInput(v); onSend() }} />
+        }
+        else if (ui == "TripDuration") {
+            //
+            return <DaysUi onSelectedOption={(v: string) => { setUserInput(v); onSend() }} />
+        }
+        else if (ui == "Final") {
+            //
+            return <FinalUi viewTrip={()=>{}}/>
+        }
+        return null;
+    }
+
     return (
         <div className='flex flex-col h-[80vh]'>
-            {messages.length == 0 && <EmptyBoxState onSelectOption={(v:string)=>{setUserInput(v);onSend()}} />}
+            {messages.length == 0 && <EmptyBoxState onSelectOption={(v: string) => { setUserInput(v); onSend() }} />}
             {/* Display messages */}
             <section className='flex-1 overflow-y-auto p-4'>
                 {
@@ -56,16 +83,17 @@ function ChatBox() {
                             </div> :
                             <div key={index} className='flex justify-start mt-2'>
                                 <div className='max-w-[70%] bg-gray-100 text-black px-4 py-2 rounded-lg' >
-                                    <p>{msg.content}</p>
+                                    {msg.content}
+                                    {RenderGenerativeUi(msg.ui ?? "")}
                                 </div>
                             </div>
                     ))
                 }
 
                 {
-                    loading && 
-                    <div className='max-w-lg min-w-auto bg-gray-100 text-black px-4 py-2 rounded-lg'>
-                        <Loader2 className = "animate-spin" />
+                    loading &&
+                    <div className='max-w-[70%] bg-gray-100 text-black mt-2 px-4 py-2 rounded-lg flex items-center justify-center'>
+                        <Loader2 className="animate-spin" />
                     </div>
                 }
 
