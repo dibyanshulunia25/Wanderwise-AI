@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-    baseURL: "https://openrouter.ai/api/v1",
-    apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY,
 });
 
 const prompt = `You are an AI Trip Planner Agent. Your goal is to help the user plan a trip by asking one relevant trip-related question at a time.
@@ -101,39 +101,37 @@ Output MUST strictly follow this schema and start with a opening curlybrace and 
 }
  `
 
-
-
 export async function POST(req: NextRequest) {
-    const { messages, isFinal } = await req.json();
+  const { messages, isFinal } = await req.json();
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "google/gemini-2.5-flash",
+      messages: [
+        {
+          "role": "system",
+          "content": isFinal ? FINAL_PROMPT : prompt
+        },
+        ...messages
+      ],
+      // max_tokens: 81920,
+      response_format: { type: "json_object" },
+    });
+
+    const message = completion.choices[0].message;
+    const content = message.content ?? "";
 
     try {
-        const completion = await openai.chat.completions.create({
-            model: "openai/gpt-oss-120b:free",
-            messages: [
-                {
-                    "role": "system",
-                    "content": isFinal ? FINAL_PROMPT : prompt
-                },
-                ...messages
-            ],
-            max_tokens: 2000,
-            response_format: { type: "json_object" },
-        });
-
-        const message = completion.choices[0].message;
-        const content = message.content ?? "";
-
-        try {
-            return NextResponse.json(JSON.parse(content));
-        } catch (e) {
-            // Fallback for non-JSON responses
-            return NextResponse.json({
-                resp: content,
-                ui: "default",
-            });
-        }
-    } catch (error) {
-        console.log(error);
-        return NextResponse.json({ error: error });
+      return NextResponse.json(JSON.parse(content));
+    } catch (e) {
+      // Fallback for non-JSON responses
+      return NextResponse.json({
+        resp: content,
+        ui: "default",
+      });
     }
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ error: error });
+  }
 }

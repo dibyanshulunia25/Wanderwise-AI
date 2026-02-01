@@ -9,21 +9,25 @@ import GroupSizeUi from './GroupSizeUi';
 import BudgetUi from './BudgetUi';
 import DaysUi from './DaysUi';
 import FinalUi from './FinalUi';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useUserDetail } from '@/app/provider';
+import { v4 as uuidv4 } from 'uuid';
 
 type Message = {
     role: string,
     content: string,
-    ui: string,
+    ui?: string,
 }
 
 type TripInfo = {
-    budget : string,
-    destination : string,
-    duration : string,
-    group_size : string,
-    origin : string,
-    hotels : any,
-    itenary : any,
+    budget: string,
+    destination: string,
+    duration: string,
+    group_size: string,
+    origin: string,
+    hotels: any,
+    itenary: any,
 }
 
 function ChatBox() {
@@ -33,6 +37,10 @@ function ChatBox() {
     const [loading, setLoading] = useState(false);
     const [isFinal, setIsFinal] = useState(false);
     const [tripDetail, setTripDetail] = useState<TripInfo>();
+    const { userDetail, setUserDetail } = useUserDetail();
+
+    const SaveTripDetail = useMutation(api.tripDetail.CreateTripDetail);
+
     const onSend = async () => {
 
         if (!userInput?.trim() && !isFinal) return;
@@ -51,6 +59,7 @@ function ChatBox() {
             isFinal: isFinal,
         });
 
+
         !isFinal && setMessages((prev: Message[]) => [...prev, {
             role: "assistant",
             content: result?.data?.resp,
@@ -59,6 +68,17 @@ function ChatBox() {
 
         if (isFinal) {
             setTripDetail(result?.data);
+            const tripId = uuidv4();
+            await SaveTripDetail({
+                tripId: tripId,
+                uid: userDetail?._id,
+                tripDetail: result?.data,
+            });
+            setMessages((prev: Message[]) => [...prev, {
+                role: "assistant",
+                content: "I've updated your trip plan based on your request.",
+                ui: "Final"
+            }]);
         }
         setLoading(false);
     }
