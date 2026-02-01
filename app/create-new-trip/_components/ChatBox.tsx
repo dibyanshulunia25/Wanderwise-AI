@@ -20,7 +20,7 @@ type Message = {
     ui?: string,
 }
 
-type TripInfo = {
+export type TripInfo = {
     budget: string,
     destination: string,
     duration: string,

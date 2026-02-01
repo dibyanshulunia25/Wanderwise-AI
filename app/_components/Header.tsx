@@ -24,7 +24,7 @@ const Header = () => {
     const { user } = useUser();
 
     return (
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between bg-background/40 backdrop-blur-3xl'>
             {/* logo */}
             <div className='flex items-center gap-2 hover:cursor-pointer'>
                 <Image src="/logo.svg" alt="Logo" width={30} height={30} className='transition-transform duration-700 ease-in-out hover:rotate-360' />
