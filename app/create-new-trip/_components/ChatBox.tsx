@@ -2,13 +2,32 @@
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Loader2, Send } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import EmptyBoxState from './EmptyBoxState';
+import GroupSizeUi from './GroupSizeUi';
+import BudgetUi from './BudgetUi';
+import DaysUi from './DaysUi';
+import FinalUi from './FinalUi';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useUserDetail } from '@/app/provider';
+import { v4 as uuidv4 } from 'uuid';
 
 type Message = {
     role: string,
-    content: string
+    content: string,
+    ui?: string,
+}
+
+type TripInfo = {
+    budget: string,
+    destination: string,
+    duration: string,
+    group_size: string,
+    origin: string,
+    hotels: any,
+    itenary: any,
 }
 
 function ChatBox() {
@@ -16,34 +35,93 @@ function ChatBox() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [userInput, setUserInput] = useState<string>("");
     const [loading, setLoading] = useState(false);
+    const [isFinal, setIsFinal] = useState(false);
+    const [tripDetail, setTripDetail] = useState<TripInfo>();
+    const { userDetail, setUserDetail } = useUserDetail();
+
+    const SaveTripDetail = useMutation(api.tripDetail.CreateTripDetail);
 
     const onSend = async () => {
 
-        if (!userInput?.trim()) return;
+        if (!userInput?.trim() && !isFinal) return;
 
         setLoading(true);
         setUserInput('');
         const newMsg: Message = {
             role: "user",
-            content: userInput
+            content: userInput ?? "",
         }
 
         setMessages((prev: Message[]) => [...prev, newMsg]);
 
         const result = await axios.post("/api/aimodel", {
-            messages: [...messages, newMsg]
+            messages: [...messages, newMsg],
+            isFinal: isFinal,
         });
 
-        setMessages((prev: Message[]) => [...prev, {
+
+        !isFinal && setMessages((prev: Message[]) => [...prev, {
             role: "assistant",
-            content: result?.data?.resp
+            content: result?.data?.resp,
+            ui: result?.data?.ui
         }]);
 
+        if (isFinal) {
+            setTripDetail(result?.data);
+            const tripId = uuidv4();
+            await SaveTripDetail({
+                tripId: tripId,
+                uid: userDetail?._id,
+                tripDetail: result?.data,
+            });
+            setMessages((prev: Message[]) => [...prev, {
+                role: "assistant",
+                content: "I've updated your trip plan based on your request.",
+                ui: "Final"
+            }]);
+        }
         setLoading(false);
     }
+
+    const RenderGenerativeUi = (ui: string) => {
+        if (ui == "budget") {
+            //budget ui component
+            return <BudgetUi onSelectedOption={(v: string) => { setUserInput(v); onSend() }} />
+        }
+        else if (ui == "groupSize") {
+            //groupSize ui component
+            return <GroupSizeUi onSelectedOption={(v: string) => { setUserInput(v); onSend() }} />
+        }
+        else if (ui == "TripDuration") {
+            //
+            return <DaysUi onSelectedOption={(v: string) => { setUserInput(v); onSend() }} />
+        }
+        else if (ui == "Final") {
+            //
+            return <FinalUi viewTrip={() => { console.log() }}
+                disable={!tripDetail}
+            />
+        }
+        return null;
+    }
+
+    useEffect(() => {
+        const lastMessage = messages[messages.length - 1];
+        if (lastMessage?.ui == "Final") {
+            setIsFinal(true);
+            setUserInput("OK, Great");
+        }
+    }, [messages])
+
+    useEffect(() => {
+        if (isFinal && userInput) {
+            onSend();
+        }
+    }, [isFinal])
+
     return (
         <div className='flex flex-col h-[80vh]'>
-            {messages.length == 0 && <EmptyBoxState onSelectOption={(v:string)=>{setUserInput(v);onSend()}} />}
+            {messages.length == 0 && <EmptyBoxState onSelectOption={(v: string) => { setUserInput(v); onSend() }} />}
             {/* Display messages */}
             <section className='flex-1 overflow-y-auto p-4'>
                 {
@@ -56,16 +134,17 @@ function ChatBox() {
                             </div> :
                             <div key={index} className='flex justify-start mt-2'>
                                 <div className='max-w-[70%] bg-gray-100 text-black px-4 py-2 rounded-lg' >
-                                    <p>{msg.content}</p>
+                                    {msg.content}
+                                    {RenderGenerativeUi(msg.ui ?? "")}
                                 </div>
                             </div>
                     ))
                 }
 
                 {
-                    loading && 
-                    <div className='max-w-lg min-w-auto bg-gray-100 text-black px-4 py-2 rounded-lg'>
-                        <Loader2 className = "animate-spin" />
+                    loading &&
+                    <div className='max-w-[70%] bg-gray-100 text-black mt-2 px-4 py-2 rounded-lg flex items-center justify-center'>
+                        <Loader2 className="animate-spin" />
                     </div>
                 }
 
