@@ -20,10 +20,12 @@ const ActivityList = ({ activity }: { activity: Activity }) => {
     }
 
     useEffect(() => {
-        activity && GetGooglePlaceDetail();
+        if (activity) {
+            GetGooglePlaceDetail();
+        }
     }, [activity])
     return (
-        <div className='break-inside-avoid-column hover:scale-105 transition-all cursor-pointer border rounded-xl p-3 shadow-md flex flex-col gap-2 mb-6'>
+        <div className='h-full transition-all cursor-pointer border rounded-xl p-3 shadow-md flex flex-col gap-2'>
             <Image src={photoUrl ? photoUrl : '/placeholder.png'} alt={activity.place_name} width={400} height={200} className='rounded-xl h-[180px] w-full object-cover' />
             <h3 className="text-lg font-semibold">{activity.place_name}</h3>
             <h2 className='text-sm text-green-400 flex justify-start gap-2'><Ticket /> {activity.ticket_pricing}</h2>

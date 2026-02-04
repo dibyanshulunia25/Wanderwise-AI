@@ -45,13 +45,6 @@ If you violate this, the response is invalid.
 
 Generate a travel plan using the schema below.
 
-Trip Details:
-- Destination: Dubai, United Arab Emirates
-- Duration: 3 days
-- Origin: Kathmandu, Nepal
-- Budget: Cheap
-- Group Size: 1
-
 Output MUST strictly follow this schema and start with a opening curlybrace and end with a closing curlybrace:
 
 {
