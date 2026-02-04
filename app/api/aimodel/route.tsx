@@ -65,7 +65,7 @@ Output MUST strictly follow this schema and start with a opening curlybrace and 
       {
         "hotel_name": "string",
         "hotel_address": "string",
-        "price_per_night": "string",
+        "price_per_night": "string", //in inr only rupees
         "hotel_image_url": "string",
         "geo_coordinates": {
           "latitude": number,
@@ -90,7 +90,7 @@ Output MUST strictly follow this schema and start with a opening curlybrace and 
               "longitude": number
             },
             "place_address": "string",
-            "ticket_pricing": "string",
+            "ticket_pricing": "string",//in inr only rupees
             "time_travel_each_location": "string",
             "best_time_to_visit": "string"
           }
