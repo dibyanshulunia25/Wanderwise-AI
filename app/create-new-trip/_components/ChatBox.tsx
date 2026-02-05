@@ -114,7 +114,7 @@ function ChatBox() {
             });
             setMessages((prev: Message[]) => [...prev, {
                 role: "assistant",
-                content: "I've updated your trip plan based on your request.",
+                content: "I've created your trip plan based on your request.",
                 ui: "Final"
             }]);
         }
@@ -147,7 +147,7 @@ function ChatBox() {
         const lastMessage = messages[messages.length - 1];
         if (lastMessage?.ui == "Final") {
             setIsFinal(true);
-            // setUserInput("OK, Great");
+            setUserInput("OK, Great");
         }
     }, [messages])
 

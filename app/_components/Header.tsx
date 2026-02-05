@@ -1,6 +1,6 @@
 "use client";
 import { Button } from '@/components/ui/button'
-import { SignInButton, useUser } from '@clerk/nextjs'
+import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -39,17 +39,23 @@ const Header = () => {
                 ))}
             </div>
             {/* get started button */}
-            {!user ?
-                <SignInButton mode='modal'>
-                    <Button className='hover:cursor-pointer'>Get Started</Button>
-                </SignInButton>
-                :
-                <Link href={'/create-new-trip'}>
-                    <Button>
-                        Create New Trip
-                    </Button>
-                </Link>
-            }
+            <div>
+                {!user ?
+                    <SignInButton mode='modal'>
+                        <Button className='hover:cursor-pointer'>Get Started</Button>
+                    </SignInButton>
+                    :
+                    <Link href={'/create-new-trip'}>
+                        <Button className='hover:cursor-pointer'>
+                            Create New Trip
+                        </Button>
+                    </Link>
+                }
+                <div className='relative -top-10 -right-30'>
+                    <UserButton />
+                </div>
+
+            </div>
         </div>
     )
 }
