@@ -248,8 +248,8 @@ const Itinerary = () => {
             {tripData ? <Timeline data={data} tripData={tripData} /> 
             :
             <div>
-                <Image src={'/travel.png'} alt="travel" width={800} height={800} className='w-full h-auto object-cover blur-xs rounded-3xl'></Image> 
-                <h2 className="text-2xl text-primary flex items-center gap-2 absolute bottom-10 ml-4 font-semibold"><ArrowLeft /> Trying to know you to generate a perfect itinerary only for you</h2>
+                <Image src={'/travel.png'} alt="travel" width={800} height={700} className='w-full h-[80vh] object-cover blur-xs rounded-3xl'></Image> 
+                <h2 className="text-2xl flex items-center gap-2 absolute bottom-10 ml-4 font-semibold text-primary"><ArrowLeft /> Trying to know you to generate a perfect itinerary only for you</h2>
             </div>
             }
         </div>
