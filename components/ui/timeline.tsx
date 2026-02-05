@@ -24,7 +24,7 @@ export const Timeline = ({ data, tripData }: { data: TimelineEntry[], tripData: 
       const rect = ref.current.getBoundingClientRect();
       setHeight(rect.height);
     }
-  }, [ref]);
+  }, [ref, data]);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,

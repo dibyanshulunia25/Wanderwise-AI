@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation';
 
 
 const menuOptions = [
@@ -22,6 +23,7 @@ const menuOptions = [
 const Header = () => {
 
     const { user } = useUser();
+    const path = usePathname();
 
     return (
         <div className='flex items-center justify-between bg-background/40 backdrop-blur-3xl'>
@@ -39,22 +41,26 @@ const Header = () => {
                 ))}
             </div>
             {/* get started button */}
-            <div>
+            <div className='flex items-center gap-4'>
                 {!user ?
                     <SignInButton mode='modal'>
                         <Button className='hover:cursor-pointer'>Get Started</Button>
                     </SignInButton>
                     :
-                    <Link href={'/create-new-trip'}>
-                        <Button className='hover:cursor-pointer'>
-                            Create New Trip
-                        </Button>
-                    </Link>
+                    path !== '/create-new-trip' ?
+                        <Link href={'/create-new-trip'}>
+                            <Button className='hover:cursor-pointer'>
+                                Create New Trip
+                            </Button>
+                        </Link>
+                        :
+                        <Link href={'/my-trips'}>
+                            <Button className='hover:cursor-pointer'>
+                                My Trips
+                            </Button>
+                        </Link>
                 }
-                <div className='relative -top-10 -right-30'>
-                    <UserButton />
-                </div>
-
+                <UserButton />
             </div>
         </div>
     )
