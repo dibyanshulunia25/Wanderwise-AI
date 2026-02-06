@@ -64,7 +64,7 @@ const MyTrips = () => {
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10'>
                     {myTrips.map((trip, index) => {
                         return (
-                            <MyTripCardItem trip={trip} key={index} />
+                            <MyTripCardItem trip={trip} key={index} index={index} />
                         )
                     })}
                 </div>

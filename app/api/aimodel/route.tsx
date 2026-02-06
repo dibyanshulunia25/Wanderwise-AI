@@ -104,7 +104,8 @@ export async function POST(req: NextRequest) {
   console.log("HasPremiumAccess:"+hasPremiumAccess)
   const decision = await aj.protect(req, { userId: user?.primaryEmailAddress?.emailAddress ?? "", requested: isFinal?5:0 }); // Deduct 5 tokens from the bucket
 
-  if (decision?.reason?.remaining == 0 && !hasPremiumAccess) {
+  // @ts-ignore
+  if (decision?.reason?.remaining && !hasPremiumAccess) {
     return NextResponse.json(
       {
         resp: "You have exceeded the rate limit. Please try again later.",

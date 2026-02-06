@@ -29,7 +29,7 @@ const Header = () => {
         <div className='flex items-center justify-between bg-background/40 backdrop-blur-3xl'>
             {/* logo */}
             <div className='flex items-center gap-2 hover:cursor-pointer'>
-                <Image src="/logo.svg" alt="Logo" width={30} height={30} className='transition-transform duration-700 ease-in-out hover:rotate-360' />
+                <Image src="/logo.svg" alt="Logo" width={30} height={30} className='transition-transform duration-700 ease-in-out hover:rotate-360 rounded-full object-cover' />
                 <h2 className='font-bold text-xl text-secondary'>WanderWise AI</h2>
             </div>
             {/* menu options */}

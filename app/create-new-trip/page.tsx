@@ -5,7 +5,7 @@ import Itinerary from './_components/Itinerary'
 import { useTripDetail } from '../provider'
 
 function CreateNewTrip() {
-    const { setTripInfo } = useTripDetail() || {};
+    const { setTripInfo } = useTripDetail();
 
     useEffect(() => {
         setTripInfo && setTripInfo(null);
