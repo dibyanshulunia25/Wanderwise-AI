@@ -51,7 +51,7 @@ const ViewTrip = () => {
 
 
     return (
-        <div>
+        <div className='mt-4 overflow-auto'>
             <Itinerary />
         </div>
     )

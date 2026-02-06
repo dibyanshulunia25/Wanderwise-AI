@@ -6,14 +6,7 @@ import { useTripDetail } from '@/app/provider';
 import { TripInfo } from './ChatBox';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { ArrowLeft, Map as MapIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import dynamic from 'next/dynamic';
-
-const MapView = dynamic(() => import('./MapView'), {
-    ssr: false,
-    loading: () => <div className="h-[500px] w-full rounded-2xl bg-gray-100 animate-pulse flex items-center justify-center">Loading Map...</div>
-});
+import { ArrowLeft } from 'lucide-react';
 
 
 const Itinerary = () => {
@@ -24,12 +17,8 @@ const Itinerary = () => {
 
 
     useEffect(() => {
-        if (tripInfo) {
-            setTripData(tripInfo);
-        }
+        setTripData(tripInfo || null);
     }, [tripInfo]);
-
-    const [isMapView, setIsMapView] = useState(false);
 
     const data = tripData ? [
         {
@@ -58,26 +47,8 @@ const Itinerary = () => {
         })) || [])
     ] : [];
     return (
-        <div className="relative w-full overflow-y-auto h-[90vh] mt-4">
-            {tripData ? (
-                <div className='flex flex-col gap-5'>
-                    <div className='flex justify-end'>
-                        <Button
-                            onClick={() => setIsMapView(!isMapView)}
-                            variant="outline"
-                            className="flex items-center gap-2"
-                        >
-                            {isMapView ? <MapIcon className='w-4 h-4' /> : <MapIcon className='w-4 h-4' />}
-                            {isMapView ? "Show List" : "Show Map"}
-                        </Button>
-                    </div>
-                    {isMapView ? (
-                        <MapView tripData={tripData} />
-                    ) : (
-                        <Timeline data={data} tripData={tripData} />
-                    )}
-                </div>
-            )
+        <div className="relative w-full overflow-y-auto h-[80vh] rounded-3xl bg-white">
+            {tripData ? <Timeline data={data} tripData={tripData} />
                 :
                 <div>
                     <Image src={'/travel.png'} alt="travel" width={800} height={700} className='w-full h-[80vh] object-cover blur-xs rounded-3xl'></Image>
