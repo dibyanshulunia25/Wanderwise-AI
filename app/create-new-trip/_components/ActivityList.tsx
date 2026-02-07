@@ -8,22 +8,22 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 const ActivityList = ({ activity }: { activity: Activity }) => {
-    const [photoUrl, setPhotoUrl] = useState<string>('');
-    const GetGooglePlaceDetail = async () => {
-        const result = await axios.post('/api/google-place-detail', {
-            placeName: activity?.place_name + ":" + activity?.place_address,
-        });
-        if (result?.data.e) {
-            return;
-        }
-        setPhotoUrl(result?.data);
-    }
+    //const [photoUrl, setPhotoUrl] = useState<string>('');
+    //const GetGooglePlaceDetail = async () => {
+        //const result = await axios.post('/api/google-place-detail', {
+           // placeName: activity?.place_name + ":" + activity?.place_address,
+       // });
+        //if (result?.data.e) {
+            //return;
+       // }
+        //setPhotoUrl(result?.data);
+    //}
 
-    useEffect(() => {
-        if (activity) {
-            GetGooglePlaceDetail();
-        }
-    }, [activity])
+    //useEffect(() => {
+        //if (activity) {
+            //GetGooglePlaceDetail();
+        //}
+    //}, [activity])
     return (
         <div className='h-full transition-all cursor-pointer border rounded-xl p-3 shadow-md flex flex-col gap-2'>
             <Image src={photoUrl ? photoUrl : '/placeholder.png'} alt={activity.place_name} width={400} height={200} className='rounded-xl h-[180px] w-full object-cover' />
