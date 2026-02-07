@@ -9,21 +9,21 @@ import axios from 'axios'
 
 const HotelCardItem = ({ hotel }: { hotel: Hotel }) => {
     const [photoUrl, setPhotoUrl] = useState<string>('');
-    const GetGooglePlaceDetail = async () => {
-        const result = await axios.post('/api/google-place-detail', {
-            placeName: hotel?.hotel_name,
-        });
-        if (result?.data.e) {
-            return;
-        }
-        setPhotoUrl(result?.data);
-    }
+    // const GetGooglePlaceDetail = async () => {
+    //     const result = await axios.post('/api/google-place-detail', {
+    //         placeName: hotel?.hotel_name,
+    //     });
+    //     if (result?.data.e) {
+    //         return;
+    //     }
+    //     setPhotoUrl(result?.data);
+    // }
 
-    useEffect(() => {
-        if (hotel) {
-            GetGooglePlaceDetail();
-        }
-    }, [hotel])
+    // useEffect(() => {
+    //     if (hotel) {
+    //         GetGooglePlaceDetail();
+    //     }
+    // }, [hotel])
 
     return (
         <div className='h-full transition-all cursor-pointer border rounded-xl p-3 shadow-md flex flex-col gap-2 mb-6'>

@@ -21,21 +21,21 @@ const MyTripCardItem = ({ trip, index }: { trip: Trip, index: number }) => {
     // Handle nested trip_plan if it exists, otherwise use tripDetail itself
     const normalizedTrip = tripData?.trip_plan || tripData;
 
-    const GetGooglePlaceDetail = async () => {
-        const result = await axios.post('/api/google-place-detail', {
-            placeName: normalizedTrip?.destination,
-        });
-        if (result?.data.e) {
-            return;
-        }
-        setPhotoUrl(result?.data);
-    }
+    // const GetGooglePlaceDetail = async () => {
+    //     const result = await axios.post('/api/google-place-detail', {
+    //         placeName: normalizedTrip?.destination,
+    //     });
+    //     if (result?.data.e) {
+    //         return;
+    //     }
+    //     setPhotoUrl(result?.data);
+    // }
 
-    useEffect(() => {
-        if (trip) {
-            GetGooglePlaceDetail();
-        }
-    }, [trip])
+    // useEffect(() => {
+    //     if (trip) {
+    //         GetGooglePlaceDetail();
+    //     }
+    // }, [trip])
 
     return (
         <Link key={index} className='p-4 border rounded-xl shadow-md flex flex-col gap-2 hover:scale-105 transition-all cursor-pointer' href={`/view-trips/${trip?.tripId}`}>
