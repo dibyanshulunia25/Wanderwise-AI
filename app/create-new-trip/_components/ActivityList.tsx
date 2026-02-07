@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 const ActivityList = ({ activity }: { activity: Activity }) => {
-    //const [photoUrl, setPhotoUrl] = useState<string>('');
+    const [photoUrl, setPhotoUrl] = useState<string>('');
     //const GetGooglePlaceDetail = async () => {
         //const result = await axios.post('/api/google-place-detail', {
            // placeName: activity?.place_name + ":" + activity?.place_address,
